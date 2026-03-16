@@ -1,4 +1,4 @@
-package com.pao.laboratory00;
+package src.com.pao.laboratory00;
 
 import java.util.Scanner;
 
