@@ -68,6 +68,11 @@ public class Main {
         Priority fromString = Priority.valueOf("HIGH");
         System.out.println("valueOf(\"HIGH\") = " + fromString);
 
+        System.out.println("HIGH == HIGH? " + (fromString == Priority.HIGH));
+        System.out.println("HIGH == HIGH? " + (fromString == Priority.CRITICAL));
+        for (Priority p : Priority.values()){
+            System.out.println(p.name() + ": name=" + p.name() + ", ordinea=" + p.ordinal());
+        }
     }
 }
 
