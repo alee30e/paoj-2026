@@ -1,7 +1,6 @@
 package com.pao.laboratory03.collections;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Exercițiul 1 — Colecții: HashMap și TreeMap
@@ -72,6 +71,24 @@ public class Main {
 
         System.out.println("Chei: " + freq.keySet());
         System.out.println("Valori: "+ freq.values());
+
+        TreeMap<String, Integer> sorted = new TreeMap<>(freq);
+        System.out.println("Sortat: "+ sorted);
+        System.out.println("Prima cheie: " + sorted.firstKey());
+        System.out.println("Ultima cheie: " + sorted.lastKey());
+
+        Map<String, List<String>> cursuri = new HashMap<>();
+        cursuri.put("PAOJ", new ArrayList<>(Arrays.asList("Ana", "Bogdan", "Crina", "Andreea")));
+        cursuri.put("BD", new ArrayList<>(Arrays.asList("Crina", "Eric", "Vlad")));
+        cursuri.get("BD").add("Ana");
+
+        for (String student : cursuri.get("PAOJ"))
+            System.out.println(student + " ");
+
+        System.out.println("Studenti la cursul PAOJ: " +cursuri.get("PAOJ"));
+        System.out.println("Studenti la cursul BD: " +cursuri.get("BD"));
+
+
     }
 
 }
