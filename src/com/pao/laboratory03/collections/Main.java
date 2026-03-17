@@ -1,5 +1,8 @@
 package com.pao.laboratory03.collections;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Exercițiul 1 — Colecții: HashMap și TreeMap
  *
@@ -51,6 +54,25 @@ package com.pao.laboratory03.collections;
 public class Main {
     public static void main(String[] args) {
         // TODO: implementează cele 3 părți de mai sus
+        String[] words = {"java", "python", "java", "c++", "python", "java", "rust", "c++", "go"};
+        Map<String, Integer> freq = new HashMap<>();
+        for (String word : words)
+//            if (freq.containsKey(word))
+//                freq.put(word, freq.get(word) + 1);
+//            else freq.put(word, 1);
+            freq.put(word, freq.getOrDefault(word, 0) + 1);
+
+        for (Map.Entry<String, Integer> entry: freq.entrySet())
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+
+        if (freq.containsKey("rust"))
+            System.out.println("Exista");
+        else
+            System.out.println("Nu exista");
+
+        System.out.println("Chei: " + freq.keySet());
+        System.out.println("Valori: "+ freq.values());
     }
+
 }
 
