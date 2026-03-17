@@ -1,5 +1,8 @@
 package com.pao.laboratory03.enums;
 
+
+import static com.pao.laboratory03.enums.Priority.LOW;
+
 /**
  * Exercițiul 2 — Enum-uri
  *
@@ -50,7 +53,21 @@ package com.pao.laboratory03.enums;
 public class Main {
     public static void main(String[] args) {
         // TODO: implementează pașii de mai sus
-        // Hint: creează mai întâi fișierul Priority.java în acest pachet
+        System.out.println("Toate prioritatile:");
+        for (Priority p : Priority.values()){
+            System.out.println(p.getEmoji() + " " + p.name() + " (level=" + p.getLevel() + ", color=" + p.getColor() + ")");
+        }
+        Priority current = LOW;
+        System.out.println("Switch pe prioritate");
+        switch(current){
+            case LOW: System.out.println("- Actual: prioritate scazuta"); break;
+            case MEDIUM: System.out.println("- Actual: prioritate medie"); break;
+            case HIGH: System.out.println("- Atentie: prioritate ridicata"); break;
+            case CRITICAL: System.out.println("- ATENTIE: PRIORITATE CRITICA!!"); break;
+        }
+        Priority fromString = Priority.valueOf("HIGH");
+        System.out.println("valueOf(\"HIGH\") = " + fromString);
+
     }
 }
 
