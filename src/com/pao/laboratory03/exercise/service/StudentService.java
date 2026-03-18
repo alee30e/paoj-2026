@@ -20,14 +20,14 @@ public class StudentService {
     public void addStudent(String name, int age){
         Student s = new Student(name, age);
         for (Student s1 : students){
-            if (s.getName() == s1.getName())
+            if (s.getName().equalsIgnoreCase(s1.getName()))
                 throw new RuntimeException("Exista un student cu acelasi nume");
         }
         students.add(s);
     }
     Student findByName(String name){
         for (Student s: students){
-            if (s.getName() == name)
+            if (s.getName().equalsIgnoreCase(name))
                 return s;
         }
         throw new StudentNotFoundException("Studentul cu acest nume nu exista");
@@ -48,9 +48,9 @@ public class StudentService {
     }
     public void printTopStudents(){
         List<Student> st = new ArrayList<>(students);
-        st.sort(Comparator.comparingDouble(Student::getAverage).reversed());
+        st.sort((s1, s2) -> Double.compare(s2.getAverage(), s1.getAverage()));
 
-        for (Student s : students)
+        for (Student s : st)
             System.out.println(s);
     }
     public Map<Subject, Double> getAveragePerSubject(){

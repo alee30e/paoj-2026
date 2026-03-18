@@ -132,7 +132,7 @@ public class Main {
 
                     case "5":
                         // TODO: apelează service.getAveragePerSubject() și afișează
-                        service.getAveragePerSubject();
+                        System.out.println(service.getAveragePerSubject());
                         break;
 
                     case "0":
