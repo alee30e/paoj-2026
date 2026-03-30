@@ -1,4 +1,5 @@
-package com.pao.laboratory05.angajati;
+package com.pao.laboratory05.audit;
+
 
 public class Angajat implements Comparable<Angajat> {
     private String nume;

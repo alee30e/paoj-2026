@@ -30,6 +30,6 @@ public class Carte implements Comparable<Carte>{
     }
     @Override
     public int compareTo(Carte other){
-        return Double.compare(this.getRating(), other.getRating());
+        return Double.compare(other.getRating(), this.getRating());
     }
 }

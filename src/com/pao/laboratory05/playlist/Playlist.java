@@ -19,7 +19,7 @@ public class Playlist {
         songs = temp;
     }
     public void printSortedByTitle(){
-        Song[] temp = songs;
+        Song[] temp = songs.clone();
         Arrays.sort(temp);
         for (Song s : temp){
             System.out.println(s);
@@ -27,7 +27,7 @@ public class Playlist {
     }
 
     public void printSortedByDuration(){
-        Song[] temp = songs;
+        Song[] temp = songs.clone();
         Arrays.sort(temp, new SongDurationComparator());
         for (Song s : temp) {
             System.out.println(s);

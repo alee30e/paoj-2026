@@ -11,7 +11,7 @@ public class BibliotecaService {
     public static BibliotecaService getInstance() {
         return Holder.INSTANCE;
     }
-
+    private BibliotecaService() {};
     public void addCarte(Carte carte) {
         Carte[] temp = new Carte[carti.length + 1];
         System.arraycopy(carti, 0, temp, 0, carti.length);
