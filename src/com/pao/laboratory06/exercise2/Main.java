@@ -33,7 +33,7 @@ public class Main {
         for (TipColaborator tipColab : TipColaborator.values()) {
             colaboratori.stream()
                     .filter(c -> c.getTip() == tipColab)
-                    .sorted((a, b) -> Double.compare(b.calculeazaVenitAn(), a.calculeazaVenitAn()))
+                    .sorted(((a, b) -> Double.compare(b.calculeazaVenitAn(), a.calculeazaVenitAn())))
                     .forEach(Colaborator::afisare);
         }
         // Colaborator cu venit net maxim

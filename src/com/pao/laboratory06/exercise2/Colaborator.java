@@ -1,7 +1,7 @@
 package com.pao.laboratory06.exercise2;
 import java.util.Scanner;
 
-public abstract class Colaborator implements IOperatiiCitireScriere{
+public abstract class Colaborator implements IOperatiiCitireScriere, Comparable<Colaborator>{
     protected String nume;
     protected String prenume;
     protected double venitLunar;
@@ -45,5 +45,9 @@ public abstract class Colaborator implements IOperatiiCitireScriere{
     public String toString() {
         return String.format("%s: %s %s, venit net anual: %.2f lei",
                 tipContract(), nume, prenume, calculeazaVenitAn());
+    }
+    @Override
+    public int compareTo(Colaborator other){
+        return Double.compare(other.calculeazaVenitAn(), this.calculeazaVenitAn());
     }
 }
