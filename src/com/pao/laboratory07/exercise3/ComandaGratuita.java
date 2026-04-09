@@ -12,4 +12,10 @@ public non-sealed class ComandaGratuita extends Comanda{
     public String descriere(){
         return String.format("GIFT: %s, gratuit [%s]", nume, orderState);
     }
+    public String descriereClient(){
+        return String.format("GIFT: %s, gratuit [%s] - client: %s", nume, orderState, client);
+    }
+    public String getTip(){
+        return "GIFT";
+    }
 }

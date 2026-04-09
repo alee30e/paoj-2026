@@ -29,4 +29,10 @@ public non-sealed class ComandaStandard extends Comanda{
     public String descriere(){
         return String.format("STANDARD: %s, pret: %.2f lei [%s]", nume, pret, orderState);
     }
+    public String descriereClient(){
+        return String.format("STANDARD: %s, pret: %.2f lei [%s] - client: %s", nume, pret, orderState, client);
+    }
+    public String getTip(){
+        return "STANDARD";
+    }
 }
