@@ -27,7 +27,7 @@ public class Order {
                 }
             }
         }
-        System.out.println(o);
+        System.out.println("Order state updated to: " + o);
     }
 
     public void cancel(){
@@ -35,6 +35,7 @@ public class Order {
             throw new CannotCancelFinalOrderException("Comanda nu poate fi anulata - stare curenta finala");
         history.add(o);
         o = OrderState.CANCELED;
+        System.out.println("Order has been canceled.");
     }
 
     public void undoState(){
@@ -44,6 +45,7 @@ public class Order {
         OrderState undoOrderState = history.get(i);
         o = undoOrderState;
         history.remove(i);
+        System.out.println("Order state reverted to: " + o);
     }
 
 }
