@@ -6,6 +6,11 @@ public class CurrentAccount extends Account{
         super(id, IBAN, openedDate, currency, balance, owner);
         this.monthlyFee = monthlyFee;
     }
+
+    public Double getMonthlyFee() {
+        return monthlyFee;
+    }
+
     public AccountType getAccountType(){
         return AccountType.CURRENT;
     }

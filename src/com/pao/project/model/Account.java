@@ -16,8 +16,34 @@ public abstract class Account {
         this.balance = balance;
         this.owner = owner;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getIBAN() {
+        return IBAN;
+    }
+
+    public String getOpenedDate() {
+        return openedDate;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public Client getOwner() {
+        return owner;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
     public void validateAmount(Double sum){
         if (sum <= 0) throw new InvalidAmountException("Suma trebuie sa fie pozitiva");
+        if (balance - sum < 0) throw new InvalidAmountException("Fonduri insufieciente");
     }
     public void deposit(Double sum){
         validateAmount(sum);
