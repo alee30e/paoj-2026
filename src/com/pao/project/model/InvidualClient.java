@@ -1,6 +1,6 @@
 package com.pao.project.model;
 
-public class InvidualClient {
+public class InvidualClient extends Client {
     private String firstName, lastName, CNP, dateOfBirth, ocuppation;
     private Double monthlyIncome;
 

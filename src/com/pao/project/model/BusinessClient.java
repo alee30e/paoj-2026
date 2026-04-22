@@ -1,6 +1,6 @@
 package com.pao.project.model;
 
-public class BusinessClient {
+public class BusinessClient extends Client {
     private String companyName, CUI, contactPerson;
     private Double monthlyRevenue, monthlyExpenses;
 
