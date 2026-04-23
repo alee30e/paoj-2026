@@ -1,16 +1,15 @@
 package com.pao.project.model;
 
-import java.util.List;
-
-public class InvidualClient extends Client {
-    private String firstName, lastName, CNP, dateOfBirth, ocuppation;
+public class IndividualClient extends Client {
+    private String firstName, lastName, cnp, dateOfBirth, ocuppation;
     private Double monthlyIncome;
 
-    public InvidualClient(String id, String address, String email, String phone, String firstName, String lastName, String CNP, String ocuppation, String dateOfBirth, Double monthlyIncome) {
+    public IndividualClient(String id, String address, String email, String phone, String firstName, String lastName,
+                            String cnp, String ocuppation, String dateOfBirth, Double monthlyIncome) {
         super(id, address, email, phone);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.CNP = CNP;
+        this.cnp = cnp;
         this.ocuppation = ocuppation;
         this.dateOfBirth = dateOfBirth;
         this.monthlyIncome = monthlyIncome;
@@ -25,7 +24,7 @@ public class InvidualClient extends Client {
     }
 
     public String getCNP() {
-        return CNP;
+        return cnp;
     }
 
     public String getDateOfBirth() {
@@ -40,13 +39,15 @@ public class InvidualClient extends Client {
         return monthlyIncome;
     }
 
+//    public validateBirth
+
     public ClientType getClientType(){
-        return ClientType.INVIDUAL;
+        return ClientType.INDIVIDUAL;
     }
     public String getDisplayName(){
         return firstName + " " + lastName;
     }
     public String getIdentificationNumber(){
-        return CNP;
+        return cnp;
     }
 }

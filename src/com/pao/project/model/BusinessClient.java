@@ -6,7 +6,8 @@ public class BusinessClient extends Client {
     private String companyName, CUI, contactPerson;
     private Double monthlyRevenue, monthlyExpenses;
 
-    public BusinessClient(String id, String address, String email, String phone, String companyName, String CUI, String contactPerson, Double monthlyRevenue, Double monthlyExpenses) {
+    public BusinessClient(String id, String address, String email, String phone,
+                          String companyName, String CUI, String contactPerson, Double monthlyRevenue, Double monthlyExpenses) {
         super(id, address, email, phone);
         this.companyName = companyName;
         this.CUI = CUI;

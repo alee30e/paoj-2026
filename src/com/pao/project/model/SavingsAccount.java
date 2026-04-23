@@ -1,6 +1,6 @@
 package com.pao.project.model;
 
-import com.pao.project.exception.InvalidaSavingsWithdrawException;
+import com.pao.project.exception.InvalidSavingsWithdrawException;
 
 public class SavingsAccount extends Account{
     private Double interestRate, minimumBalance, withdrawalLimit;
@@ -27,7 +27,7 @@ public class SavingsAccount extends Account{
         return AccountType.SAVINGS;
     }
     public void validateSavingsWithdraw(Double sum){
-        if ( balance - sum < 100) throw new InvalidaSavingsWithdrawException("Nu se pot scoate bani, suma ar ramane < 100");
+        if ( balance - sum < 100) throw new InvalidSavingsWithdrawException("Nu se pot scoate bani, suma ar ramane < 100");
     }
     public void withdraw(Double sum){
         validateAmount(sum);
