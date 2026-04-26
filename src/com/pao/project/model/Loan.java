@@ -190,7 +190,7 @@ public abstract class Loan {
     public int calculateNumberOfInstallment(){
         switch (frequency){
             case MONTHLY : return numberOfMonths;
-            case YEARLY : return numberOfMonths / 12;
+            case YEARLY : return (int) Math.ceil(numberOfMonths / 12.0);
             case WEEKLY: return numberOfMonths * 4;
             default:
                 throw new IllegalArgumentException("Frecventa invalida:" + frequency);
@@ -200,23 +200,25 @@ public abstract class Loan {
         return calculateTotalAmount() / calculateNumberOfInstallment();
     }
     public List<Installment> generateInstallments(){
-        List<Installment> intallments = new ArrayList<>();
+        List<Installment> generatedInstallments = new ArrayList<>();
+
         int numberOfInstallments = calculateNumberOfInstallment();
         double installmentValue = calculateInstallmentValue();
 
-        LocalDate dueDate = startDate;
+//        LocalDate dueDate = startDate;
         for(int i = 1; i <= numberOfInstallments; i++){
+            LocalDate dueDate;
             switch(frequency){
                 case MONTHLY : dueDate = startDate.plusMonths(i); break;
                 case WEEKLY : dueDate = startDate.plusWeeks(i); break;
                 case YEARLY : dueDate = startDate.plusYears(i); break;
                 default: throw new IllegalArgumentException("Frecventa invalida");
             }
-            Installment installment = new Installment("inst" + i, dueDate, installmentValue, false);
-            installments.add(installment);
+            Installment installment = new Installment(dueDate, installmentValue);
+            generatedInstallments.add(installment);
         }
-        this.installments = installments;
-        return installments;
+        this.installments = generatedInstallments;
+        return generatedInstallments;
     }
 
     public Installment getNextUnpaidInstallment() {

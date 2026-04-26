@@ -36,7 +36,7 @@ public class LoanService {
     public PersonalLoan createPersonalLoan(Client client, Double requestedAmount, String linkedAccountIBAN,
                                            int numberOfMonths,Frequency frequency, Double interestRate,
                                            Double declaredMonthlyIncome) {
-
+        accountService.findClientAccountByIban(client, linkedAccountIBAN);
         PersonalLoan loan = new PersonalLoan(client, requestedAmount, linkedAccountIBAN, numberOfMonths, frequency,
                 LocalDate.now(), interestRate, declaredMonthlyIncome, 0.40);
 
@@ -51,6 +51,7 @@ public class LoanService {
     public BusinessLoan createBusinessLoan(Client client, Double requestedAmount, String linkedAccountIBAN,
                                            int numberOfMonths, Frequency frequency, Double interestRate,
                                            Double declaredMonthlyRevenue, Double declaredMonthlyExpenses) {
+        accountService.findClientAccountByIban(client, linkedAccountIBAN);
 
         BusinessLoan loan = new BusinessLoan(client, requestedAmount, linkedAccountIBAN, numberOfMonths,
                 frequency, LocalDate.now(), interestRate, declaredMonthlyRevenue, declaredMonthlyExpenses, 0.35);
@@ -76,7 +77,7 @@ public class LoanService {
 
         loan.generateInstallments();
 
-        accountService.deposit(
+        accountService.depositLoanAmount(
                 loan.getLinkedAccountIBAN(),
                 loan.getRequestedAmount()
         );
@@ -127,8 +128,43 @@ public class LoanService {
         return result;
     }
 
+    public Loan findClientLoanById(Client client, String loanId) {
+        Loan loan = findById(loanId);
+
+        if (!loan.getClient().equals(client)) {
+            throw new IllegalStateException("Acest imprumut nu apartine clientului conectat.");
+        }
+
+        return loan;
+    }
+
     public void payNextInstallment(String loanId) {
         Loan loan = findById(loanId);
+
+        if (!loan.isActive()) {
+            throw new IllegalStateException("Imprumutul nu este activ");
+        }
+
+        Installment installment = loan.getNextUnpaidInstallment();
+
+        if (installment == null) {
+            loan.setStatus(LoanStatus.CLOSED);
+            return;
+        }
+
+        accountService.withdraw(
+                loan.getLinkedAccountIBAN(),
+                installment.getAmount()
+        );
+
+        loan.markNextInstallmentAsPaid(LocalDate.now());
+    }
+    public void payNextInstallmentForClient(Client client, String loanId) {
+        Loan loan = findById(loanId);
+
+        if (!loan.getClient().equals(client)) {
+            throw new IllegalStateException("Acest imprumut nu apartine clientului conectat.");
+        }
 
         if (!loan.isActive()) {
             throw new IllegalStateException("Imprumutul nu este activ");

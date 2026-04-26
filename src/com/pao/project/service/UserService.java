@@ -20,15 +20,16 @@ public class UserService {
             instance = new UserService();
         return instance;
     }
-    public void addUser(String id, String username, String password,
+    public User addUser(String username, String password,
                         String role, Client client){
         for (User u1 : users){
             if (u1.getUsername().equalsIgnoreCase(username)){
                 throw new InvalidUsernameException("Exista un user cu acelasi nume");
             }
         }
-        User u = new User(id, username, password, role, client);
+        User u = new User(username, password, role, client);
         users.add(u);
+        return u;
     }
     public User findByUsername(String username) {
         if (username == null || username.isEmpty()) throw new InvalidUsernameException("Username invalid");
@@ -40,15 +41,13 @@ public class UserService {
     }
     public void changePassword(String username, String oldPassword, String newPassword){
         User u = findByUsername(username);
-        if (oldPassword.equals(u.getPassword())) {
-            u.setPassword(newPassword);
-            System.out.println("Parola resetata");
+        if (!u.getPassword().equals(oldPassword)) {
+            throw new InvalidPasswordException("Parola veche este incorecta.");
         }
+        u.setPassword(newPassword);
     }
-    public void getAllUsers(){
-        for (User u : users){
-            System.out.println(u);
-        }
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users);
     }
     public void deleteUser(String username){
         User u = findByUsername(username);

@@ -29,7 +29,10 @@ public class SavingsAccount extends Account{
         return AccountType.SAVINGS;
     }
     public void validateSavingsWithdraw(Double sum){
-        if ( balance - sum < minimumBalance) throw new InvalidSavingsWithdrawException("Nu se pot scoate bani, suma ar ramane < 100");
+        if (sum > withdrawalLimit) {
+            throw new InvalidSavingsWithdrawException("Suma depaseste limita de retragere pentru contul de economii.");
+        }
+        if ( balance - sum < minimumBalance) throw new InvalidSavingsWithdrawException("Nu se pot scoate bani, suma ar ramane < "+ minimumBalance);
     }
     public void withdraw(Double sum){
         validateAmount(sum);

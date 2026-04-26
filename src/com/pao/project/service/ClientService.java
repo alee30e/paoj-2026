@@ -23,24 +23,24 @@ public class ClientService {
             instance = new ClientService();
         return instance;
     }
-    public IndividualClient addIndividualClient(String id, String address, String email, String phone, String firstName, String lastName,
+    public IndividualClient addIndividualClient(String address, String email, String phone, String firstName, String lastName,
                                                 String cnp, String occupation, String dateOfBirth, Double monthlyIncome){
         IndividualClient client = new IndividualClient(address, email, phone,
                 firstName, lastName, cnp, occupation, dateOfBirth, monthlyIncome);
 
         clients.add(client);
-        clientsById.put(id, client);
+        clientsById.put(client.getId(), client);
 
         return client;
     }
 
-    public BusinessClient addBusinessClient(String id, String address, String email, String phone, String companyName, String cui,
+    public BusinessClient addBusinessClient(String address, String email, String phone, String companyName, String cui,
                                             String contactPerson, Double monthlyRevenue, Double monthlyExpenses){
         BusinessClient client = new BusinessClient(address, email, phone,
                 companyName, cui, contactPerson, monthlyRevenue, monthlyExpenses);
 
         clients.add(client);
-        clientsById.put(id, client);
+        clientsById.put(client.getId(), client);
 
         return client;
     }

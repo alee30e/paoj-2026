@@ -22,6 +22,15 @@ public class Installment {
         this.penaltyApplied = false;
         this.status = InstallmentStatus.PENDING;
     }
+    public Installment(String id, LocalDate dueDate, Double amount, Boolean paid) {
+        this.id = id;
+        this.dueDate = dueDate;
+        this.amount = amount;
+        this.paid = paid;
+        this.paidDate = null;
+        this.penaltyApplied = false;
+        this.status = paid ? InstallmentStatus.PAID : InstallmentStatus.PENDING;
+    }
     public Installment(String id, LocalDate dueDate, Double amount, Boolean paid,
                        LocalDate paidDate, Boolean penaltyApplied) {
         this.id = id;
@@ -31,15 +40,15 @@ public class Installment {
         this.paidDate = paidDate;
         this.penaltyApplied = penaltyApplied;
     }
-    public Installment(String id, LocalDate dueDate, Double amount, Boolean paid) {
-        this.id = id;
-        this.dueDate = dueDate;
-        this.amount = amount;
-        this.paid = paid;
-//        this.paidDate = paidDate;
-    }
+//    public Installment(String id, LocalDate dueDate, Double amount, Boolean paid) {
+//        this.id = id;
+//        this.dueDate = dueDate;
+//        this.amount = amount;
+//        this.paid = paid;
+////        this.paidDate = paidDate;
+//    }
     private static String generateId(){
-        return "ACC_" + nextId++;
+        return "INST" + nextId++;
     }
 
     public String getId() {

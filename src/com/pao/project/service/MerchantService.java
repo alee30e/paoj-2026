@@ -25,9 +25,25 @@ public class MerchantService {
         return instance;
     }
 
+//    public Merchant addMerchant(String name, MerchantCategory category,
+//                                BusinessClient businessClient,
+//                                Account settlementAccount) {
+//        Merchant merchant = new Merchant(name, category, businessClient, settlementAccount);
+//
+//        merchants.add(merchant);
+//        merchantsById.put(merchant.getId(), merchant);
+//
+//        return merchant;
+//    }
+
     public Merchant addMerchant(String name, MerchantCategory category,
                                 BusinessClient businessClient,
                                 Account settlementAccount) {
+
+        if (!settlementAccount.getOwner().equals(businessClient)) {
+            throw new IllegalArgumentException("Contul de decontare nu apartine clientului business.");
+        }
+
         Merchant merchant = new Merchant(name, category, businessClient, settlementAccount);
 
         merchants.add(merchant);

@@ -6,16 +6,20 @@ import com.pao.project.exception.InvalidUsernameException;
 public class User {
     private String id, username, password, role;
     private Client client;
+    private static int nextId = 1;
 
-    public User(String id, String username, String password, String role, Client client) {
+    public User( String username, String password, String role, Client client) {
+        validateUsername(username);
         validatePassword(password);
-        this.id = id;
+        this.id = genereateId();
         this.username = username;
         this.password = password;
         this.role = role;
         this.client = client;
     }
-
+    public String genereateId(){
+        return "user_"+ nextId ++;
+    }
     public String getId() {
         return id;
     }

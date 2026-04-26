@@ -35,14 +35,47 @@ public class RecurringPaymentService {
                                                 Currency currency, Frequency frequency, LocalDate startDate, LocalDate endDate,
                                                 String description) {
 
-        RecurringPayment recurringPayment = new RecurringPayment(client, sourceAccount, merchant, amount,currency,
-                frequency, startDate, endDate, description);
+        if (!sourceAccount.getOwner().equals(client)) {
+            throw new IllegalArgumentException("Contul sursa nu apartine clientului.");
+        }
+
+        if (!merchant.isActive()) {
+            throw new IllegalStateException("Merchantul nu este activ.");
+        }
+
+        if (amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Suma platii recurente trebuie sa fie pozitiva.");
+        }
+
+        if (!sourceAccount.getCurrency().equals(currency)) {
+            throw new IllegalArgumentException("Valuta platii nu corespunde cu valuta contului sursa.");
+        }
+
+        if (!merchant.getSettlementAccount().getCurrency().equals(currency)) {
+            throw new IllegalArgumentException("Valuta platii nu corespunde cu valuta contului merchantului.");
+        }
+
+        RecurringPayment recurringPayment = new RecurringPayment(
+                client, sourceAccount, merchant, amount,
+                currency, frequency, startDate, endDate, description);
 
         recurringPayments.add(recurringPayment);
         recurringPaymentsById.put(recurringPayment.getId(), recurringPayment);
-
         return recurringPayment;
     }
+
+//    public RecurringPayment addRecurringPayment(Client client, Account sourceAccount, Merchant merchant, Double amount,
+//                                                Currency currency, Frequency frequency, LocalDate startDate, LocalDate endDate,
+//                                                String description) {
+//
+//        RecurringPayment recurringPayment = new RecurringPayment(client, sourceAccount, merchant, amount,currency,
+//                frequency, startDate, endDate, description);
+//
+//        recurringPayments.add(recurringPayment);
+//        recurringPaymentsById.put(recurringPayment.getId(), recurringPayment);
+//
+//        return recurringPayment;
+//    }
 
     public RecurringPayment findById(String id) {
         RecurringPayment payment = recurringPaymentsById.get(id);
@@ -101,32 +134,57 @@ public class RecurringPaymentService {
         Account source = payment.getSourceAccount();
         Account destination = payment.getMerchant().getSettlementAccount();
 
-        accountService.transfer(source.getIBAN(), destination.getIBAN(), payment.getAmount());
+//        accountService.transfer(source.getIBAN(), destination.getIBAN(), payment.getAmount());
+//
+//        Transaction transaction = new Transaction(source.getIBAN(), destination.getIBAN(),
+//                payment.getAmount(), payment.getCurrency(), TransactionType.RECURRING_PAYMENT,
+//                payment.getDescription());
+//
+//        transactionService.addTransaction(transaction);
 
-        Transaction transaction = new Transaction(source.getIBAN(), destination.getIBAN(),
-                payment.getAmount(), payment.getCurrency(), TransactionType.RECURRING_PAYMENT,
-                payment.getDescription());
-
-        transactionService.addTransaction(transaction);
-
+        accountService.recurringPaymentTransfer(source.getIBAN(),
+                destination.getIBAN(), payment.getAmount(), payment.getDescription());
         payment.updateNextPaymentDate();
     }
 
+//    public void executeDuePayments(LocalDate today) {
+//        for (RecurringPayment payment : recurringPayments) {
+//            if (payment.isDue(today) && payment.getMerchant().isActive()) {
+//                Account source = payment.getSourceAccount();
+//                Account destination = payment.getMerchant().getSettlementAccount();
+//
+////                accountService.transfer(source.getIBAN(), destination.getIBAN(), payment.getAmount());
+////
+////                Transaction transaction = new Transaction(source.getIBAN(), destination.getIBAN(),
+////                        payment.getAmount(), payment.getCurrency(), TransactionType.RECURRING_PAYMENT,
+////                        payment.getDescription());
+////
+////                transactionService.addTransaction(transaction);
+//                accountService.recurringPaymentTransfer(source.getIBAN(), destination.getIBAN(),
+//                        payment.getAmount(), payment.getDescription());
+//                payment.updateNextPaymentDate();
+//            }
+//        }
+//    }
+
     public void executeDuePayments(LocalDate today) {
         for (RecurringPayment payment : recurringPayments) {
-            if (payment.isDue(today) && payment.getMerchant().isActive()) {
-                Account source = payment.getSourceAccount();
-                Account destination = payment.getMerchant().getSettlementAccount();
+            try {
+                if (payment.isDue(today) && payment.getMerchant().isActive()) {
+                    Account source = payment.getSourceAccount();
+                    Account destination = payment.getMerchant().getSettlementAccount();
 
-                accountService.transfer(source.getIBAN(), destination.getIBAN(), payment.getAmount());
+                    accountService.recurringPaymentTransfer(
+                            source.getIBAN(),
+                            destination.getIBAN(),
+                            payment.getAmount(),
+                            payment.getDescription()
+                    );
 
-                Transaction transaction = new Transaction(source.getIBAN(), destination.getIBAN(),
-                        payment.getAmount(), payment.getCurrency(), TransactionType.RECURRING_PAYMENT,
-                        payment.getDescription());
-
-                transactionService.addTransaction(transaction);
-
-                payment.updateNextPaymentDate();
+                    payment.updateNextPaymentDate();
+                }
+            } catch (RuntimeException e) {
+                System.out.println("Plata recurenta " + payment.getId() + " nu a putut fi executata: " + e.getMessage());
             }
         }
     }
