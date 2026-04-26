@@ -1,9 +1,11 @@
 package com.pao.project.model;
 
+import java.time.LocalDate;
+
 public class CurrentAccount extends Account{
     private Double monthlyFee; //overdraftLimit
-    public CurrentAccount(String id, String IBAN, String openedDate, Currency currency, Double balance, Client owner, Double monthlyFee){
-        super(id, IBAN, openedDate, currency, balance, owner);
+    public CurrentAccount(String IBAN, LocalDate openedDate, Currency currency, Double balance, Client owner, Double monthlyFee){
+        super(IBAN, openedDate, currency, balance, owner);
         this.monthlyFee = monthlyFee;
     }
 

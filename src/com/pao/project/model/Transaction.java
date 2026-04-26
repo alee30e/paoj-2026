@@ -1,17 +1,33 @@
 package com.pao.project.model;
 
-public class Transaction {
-    private  String id, sourceIban, destinationIban, amount, currency, type, timestamp, description;
+import java.time.LocalDateTime;
 
-    public Transaction(String id, String sourceIban, String amount, String destinationIban, String currency, String type, String timestamp, String description) {
-        this.id = id;
+public class Transaction {
+    private static int nextId = 1;
+
+    private final String id;
+    private final String sourceIban;
+    private final String destinationIban;
+    private final Double amount;
+    private final Currency currency;
+    private final TransactionType type;
+    private final LocalDateTime timestamp;
+    private final String description;
+
+    public Transaction(String sourceIban, String destinationIban, Double amount,
+                       Currency currency, TransactionType type, String description) {
+        this.id = generateId();
         this.sourceIban = sourceIban;
-        this.amount = amount;
         this.destinationIban = destinationIban;
+        this.amount = amount;
         this.currency = currency;
         this.type = type;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now();
         this.description = description;
+    }
+
+    private static String generateId() {
+        return "TX_" + nextId++;
     }
 
     public String getId() {
@@ -26,23 +42,30 @@ public class Transaction {
         return destinationIban;
     }
 
-    public String getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public String getTimestamp() {
+    public TransactionType getType() {
+        return type;
+    }
+
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" + "id='" + id + '\'' + ", sourceIban='" + sourceIban + '\'' +
+                ", destinationIban='" + destinationIban + '\'' + ", amount=" + amount + ", currency=" + currency +
+                ", type=" + type + ", timestamp=" + timestamp + ", description='" + description + '\'' + '}';
     }
 }

@@ -1,16 +1,16 @@
 package com.pao.project.model;
 
 public class IndividualClient extends Client {
-    private String firstName, lastName, cnp, dateOfBirth, ocuppation;
+    private String firstName, lastName, cnp, dateOfBirth, occupation;
     private Double monthlyIncome;
 
-    public IndividualClient(String id, String address, String email, String phone, String firstName, String lastName,
-                            String cnp, String ocuppation, String dateOfBirth, Double monthlyIncome) {
-        super(id, address, email, phone);
+    public IndividualClient(String address, String email, String phone, String firstName, String lastName,
+                            String cnp, String occupation, String dateOfBirth, Double monthlyIncome) {
+        super(address, email, phone);
         this.firstName = firstName;
         this.lastName = lastName;
         this.cnp = cnp;
-        this.ocuppation = ocuppation;
+        this.occupation = occupation;
         this.dateOfBirth = dateOfBirth;
         this.monthlyIncome = monthlyIncome;
     }
@@ -31,8 +31,8 @@ public class IndividualClient extends Client {
         return dateOfBirth;
     }
 
-    public String getOcuppation() {
-        return ocuppation;
+    public String getOccupation() {
+        return occupation;
     }
 
     public Double getMonthlyIncome() {
@@ -49,5 +49,12 @@ public class IndividualClient extends Client {
     }
     public String getIdentificationNumber(){
         return cnp;
+    }
+    @Override
+    public String toString() {
+        return "IndividualClient{" + "id='" + getId() + '\'' + ", name='" + getDisplayName() + '\'' +
+                ", cnp='" + cnp + '\'' + ", dateOfBirth='" + dateOfBirth + '\'' + ", occupation='" + occupation + '\'' +
+                ", monthlyIncome=" + monthlyIncome + ", email='" + getEmail() + '\'' + ", phone='" + getPhone() + '\'' +
+                ", address='" + getAddress() + '\'' + ", numberOfAccounts=" + getAccounts().size() + '}';
     }
 }

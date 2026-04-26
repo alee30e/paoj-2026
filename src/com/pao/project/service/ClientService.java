@@ -25,7 +25,7 @@ public class ClientService {
     }
     public IndividualClient addIndividualClient(String id, String address, String email, String phone, String firstName, String lastName,
                                                 String cnp, String occupation, String dateOfBirth, Double monthlyIncome){
-        IndividualClient client = new IndividualClient(id, address, email, phone,
+        IndividualClient client = new IndividualClient(address, email, phone,
                 firstName, lastName, cnp, occupation, dateOfBirth, monthlyIncome);
 
         clients.add(client);
@@ -36,7 +36,7 @@ public class ClientService {
 
     public BusinessClient addBusinessClient(String id, String address, String email, String phone, String companyName, String cui,
                                             String contactPerson, Double monthlyRevenue, Double monthlyExpenses){
-        BusinessClient client = new BusinessClient(id, address, email, phone,
+        BusinessClient client = new BusinessClient(address, email, phone,
                 companyName, cui, contactPerson, monthlyRevenue, monthlyExpenses);
 
         clients.add(client);
@@ -45,9 +45,9 @@ public class ClientService {
         return client;
     }
 
-    public Client findById(String id){
-        return clientsById.get(id);
-    }
+//    public Client findById(String id){
+//        return clientsById.get(id);
+//    }
 
     public List<Client> getAllClients(){
         return new ArrayList<>(clients);
@@ -59,6 +59,15 @@ public class ClientService {
             clients.remove(client);
             clientsById.remove(id);
         }
+    }
+    public Client findById(String id) {
+        Client client = clientsById.get(id);
+
+        if (client == null) {
+            throw new UserNotFoundException("Clientul cu id-ul " + id + " nu exista");
+        }
+
+        return client;
     }
     public Client findByIdentificationNumber(String identificationNumber){
         for (Client client : clients){

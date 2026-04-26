@@ -1,14 +1,12 @@
 package com.pao.project.model;
 
-import java.util.List;
-
 public class BusinessClient extends Client {
     private String companyName, CUI, contactPerson;
     private Double monthlyRevenue, monthlyExpenses;
 
-    public BusinessClient(String id, String address, String email, String phone,
+    public BusinessClient(String address, String email, String phone,
                           String companyName, String CUI, String contactPerson, Double monthlyRevenue, Double monthlyExpenses) {
-        super(id, address, email, phone);
+        super(address, email, phone);
         this.companyName = companyName;
         this.CUI = CUI;
         this.contactPerson = contactPerson;
@@ -46,4 +44,10 @@ public class BusinessClient extends Client {
         return CUI;
     }
 
+    @Override
+    public String toString() {
+        return "BusinessClient{" + "id='" + getId() + '\'' + ", companyName='" + companyName + '\'' +
+                ", CUI='" + CUI + '\'' + ", contactPerson='" + contactPerson + '\'' + ", email='" + getEmail() + '\'' + ", phone='" + getPhone() + '\'' +
+                ", address='" + getAddress() + '\'' + ", monthlyRevenue=" + monthlyRevenue + ", monthlyExpenses=" + monthlyExpenses + '}';
+    }
 }
