@@ -66,8 +66,6 @@ public class Main {
     }
 
     private static void seedData() {
-        System.out.println("Se incarca date demo...");
-
         IndividualClient ana = clientService.addIndividualClient("Bucuresti, Strada Ciresi 10", "ana.popescu@gmail.com", "0712345678",
                 "Ana", "Popescu", "5010101123456", "Programator", "2001-01-01", 6000.0);
 

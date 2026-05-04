@@ -177,10 +177,7 @@ public class LoanService {
             return;
         }
 
-        accountService.withdraw(
-                loan.getLinkedAccountIBAN(),
-                installment.getAmount()
-        );
+        accountService.withdrawLoanPayment(loan.getLinkedAccountIBAN(), installment.getAmount());
 
         loan.markNextInstallmentAsPaid(LocalDate.now());
     }

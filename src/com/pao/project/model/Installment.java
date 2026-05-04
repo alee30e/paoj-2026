@@ -85,7 +85,7 @@ public class Installment {
         this.status = InstallmentStatus.PAID;
     }
 
-    public Boolean isOverdue(LocalDate today){
+    public boolean isOverdue(LocalDate today){
         return !paid && today.isAfter(dueDate);
     }
 
@@ -96,7 +96,7 @@ public class Installment {
     }
 
     public void applyPenalty(Double penaltyAmount){
-        if (!penaltyApplied){
+        if (status == InstallmentStatus.OVERDUE && !penaltyApplied){
             amount += penaltyAmount;
             penaltyApplied = true;
         }

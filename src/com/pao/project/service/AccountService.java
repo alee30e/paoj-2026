@@ -110,7 +110,8 @@ public class AccountService {
 
     public void depositForClient(Client client, String iban, Double amount) {
         Account account = findClientAccountByIban(client, iban);
-        account.deposit(amount);
+//        account.deposit(amount);
+        deposit(iban, amount);
     }
 
     public void withdraw(String iban, Double amount) {
@@ -125,7 +126,8 @@ public class AccountService {
 
     public void withdrawForClient(Client client, String iban, Double amount) {
         Account account = findClientAccountByIban(client, iban);
-        account.withdraw(amount);
+//        account.withdraw(amount);
+        withdraw(iban, amount);
     }
     public void withdrawLoanPayment(String iban, Double amount) {
         Account account = findByIban(iban);
@@ -177,12 +179,13 @@ public class AccountService {
 
     public void transferFromClient(Client client, String sourceIban, String destinationIban, Double amount) {
         Account source = findClientAccountByIban(client, sourceIban);
-        Account destination = findByIban(destinationIban);
-
-        validateTransfer(source, destination);
-
-        source.withdraw(amount);
-        destination.deposit(amount);
+//        Account destination = findByIban(destinationIban);
+//
+//        validateTransfer(source, destination);
+//
+//        source.withdraw(amount);
+//        destination.deposit(amount);
+        transfer(sourceIban, destinationIban, amount);
     }
 
     public void deleteAccount(String iban) {
