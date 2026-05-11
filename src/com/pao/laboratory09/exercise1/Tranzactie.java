@@ -48,7 +48,9 @@ public class Tranzactie implements Serializable {
     public String getNote() {
         return note;
     }
-
+    public void setNote(String note) {
+        this.note = note;
+    }
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

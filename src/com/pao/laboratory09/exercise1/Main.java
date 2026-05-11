@@ -31,6 +31,19 @@ public class Main {
             lista.add(t);
         }
 
+        for (Tranzactie t : lista) {
+            t.setNote("procesat");
+        }
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(OUTPUT_FILE))) {
+            out.writeObject(lista);
+        }
+
+        List<Tranzactie> listaDeserializata;
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(OUTPUT_FILE))) {
+            listaDeserializata = (List<Tranzactie>) in.readObject();
+        }
+
         while (sc.hasNextLine()){
             String linie = sc.nextLine();
             if (linie.isEmpty()) continue;
@@ -44,7 +57,7 @@ public class Main {
 
                 boolean gasit = false;
 
-                for (Tranzactie t : lista) {
+                for (Tranzactie t : listaDeserializata) {
                     if (t.getData().startsWith(data)){
                         System.out.println(t);
                         gasit = true;
@@ -58,7 +71,7 @@ public class Main {
 
                 boolean gasit = false;
 
-                for (Tranzactie t : lista){
+                for (Tranzactie t : listaDeserializata){
                     if (t.getId() == id){
                         System.out.println("NOTE[" + id + "]: "+ t.getNote());
                         gasit = true;
