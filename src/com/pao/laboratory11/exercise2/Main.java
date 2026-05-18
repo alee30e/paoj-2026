@@ -1,146 +1,126 @@
 package com.pao.laboratory11.exercise2;
 
+import com.pao.laboratory11.exercise1.ChannelScore;
+import com.pao.laboratory11.exercise1.Tranzactie;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            run();
-        } catch (IOException e) {
-            // Keep deterministic checker output.
+        Scanner sc = new Scanner(System.in);
+
+        List<Tranzactie> tranzactii = new ArrayList<>();
+
+        int n = Integer.parseInt(readNonEmptyLine(sc));
+        
+        for (int i = 0; i < n; i++) {
+            String line = readNonEmptyLine(sc);
+            String[] parts = line.trim().split("\\s+");
+
+            int id = Integer.parseInt(parts[0]);
+            double amount = Double.parseDouble(parts[1]);
+            String date = parts[2];
+            String country = parts[3];
+            String channel = parts[4];
+            String accountId = parts[5];
+
+            Tranzactie tranzactie = new Tranzactie(id, amount, date, country, channel, accountId);
+            tranzactii.add(tranzactie);
+        }
+
+        int q = Integer.parseInt(readNonEmptyLine(sc));
+
+        for (int i = 0; i < q; i++) {
+            String line = readNonEmptyLine(sc);
+            String[] parts = line.trim().split("\\s+");
+
+            String command = parts[0];
+
+            switch (command) {
+                case "REPORT_MONTH" -> {
+                    String month = parts[1];
+                    reportMonth(tranzactii, month);
+                }
+
+                case "REPORT_ACCOUNT" -> {
+                    String accountId = parts[1];
+                    reportAccount(tranzactii, accountId);
+                }
+
+                case "TOP_CHANNELS" -> {
+                    int k = Integer.parseInt(parts[1]);
+                    topChannels(tranzactii, k);
+                }
+
+                default -> {
+                }
+            }
         }
     }
+    private static String readNonEmptyLine(Scanner sc){
+        while (sc.hasNextLine()){
+            String linie = sc.nextLine().trim();
+            if (!linie.isEmpty()) return linie;
+        }
+        return "";
+    }
+    private static void reportMonth(List<Tranzactie> tranzactii, String month){
+//        int nr = 0;
+//        double total = 0;
+//        for (Tranzactie t: tranzactii){
+//            if (t.getDate().substring(0,7).equals(month)) {
+//                total += t.getAmount();
+//                nr += 1;
+//            }
+//        }
 
-    private static void run() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Map<String, DoubleSummaryStatistics> byMonth = tranzactii.stream().collect(Collectors.groupingBy(
+                t->t.getDate().substring(0,7), Collectors.summarizingDouble(t -> t.getAmount())));
 
-        String first = nextNonEmpty(br);
-        if (first == null) {
+        DoubleSummaryStatistics statistica = byMonth.get(month);
+
+        if (statistica == null) {
+            System.out.printf(Locale.US, "MONTH %s total=%.2f count=%d%n", month, 0.0, 0);
+        }
+        else{
+            System.out.printf(Locale.US, "MONTH %s total=%.2f count=%d%n", month, statistica.getSum(), statistica.getCount());
+        }
+    }
+    private static void reportAccount(List<Tranzactie> tranzactii, String accountId){
+//        int nr = 0;
+//        double total = 0;
+//
+//        for (Tranzactie t: tranzactii){
+//            if (t.getAccountId().equals(accountId)){
+//                total += t.getAmount();
+//                nr += 1;
+//            }
+//        }
+        Map<String, DoubleSummaryStatistics> byAccId = tranzactii.stream().collect(Collectors.groupingBy(
+                t -> t.getAccountId(), Collectors.summarizingDouble(t->t.getAmount())
+        ));
+        DoubleSummaryStatistics statistica = byAccId.get(accountId);
+        if (statistica == null)
+            System.out.printf(Locale.US, "ACCOUNT %s total=%.2f count=%d%n", accountId, 0.0, 0);
+        else{
+            System.out.printf(Locale.US, "ACCOUNT %s total=%.2f count=%d%n", accountId, statistica.getSum(), statistica.getCount());
+        }
+    }
+    private static void topChannels(List<Tranzactie> tranzactii, int k){
+        Map<String, Long> statistica = tranzactii.stream().collect(Collectors.groupingBy(tx -> tx.getChannel(), Collectors.counting()));
+
+        if (statistica.isEmpty()) {
+            System.out.println("NONE");
             return;
         }
 
-        int n = Integer.parseInt(first);
-        List<Tx> txs = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            String line = nextNonEmpty(br);
-            if (line == null) {
-                return;
-            }
-
-            String[] p = line.split("\\s+");
-            txs.add(new Tx(
-                    Integer.parseInt(p[0]),
-                    Double.parseDouble(p[1]),
-                    p[2],
-                    p[3],
-                    p[4],
-                    p[5]));
-        }
-
-        int q = Integer.parseInt(nextNonEmpty(br));
-        for (int i = 0; i < q; i++) {
-            String line = nextNonEmpty(br);
-            if (line == null) {
-                return;
-            }
-
-            String[] p = line.split("\\s+");
-            String op = p[0];
-
-            switch (op) {
-                case "REPORT_MONTH": {
-                    String month = p[1];
-                    double total = 0.0;
-                    int count = 0;
-                    for (Tx tx : txs) {
-                        if (tx.date.startsWith(month)) {
-                            total += tx.amount;
-                            count++;
-                        }
-                    }
-                    System.out.printf(Locale.US, "MONTH %s total=%.2f count=%d%n", month, total, count);
-                    break;
-                }
-
-                case "REPORT_ACCOUNT": {
-                    String account = p[1];
-                    double total = 0.0;
-                    int count = 0;
-                    for (Tx tx : txs) {
-                        if (tx.account.equals(account)) {
-                            total += tx.amount;
-                            count++;
-                        }
-                    }
-                    System.out.printf(Locale.US, "ACCOUNT %s total=%.2f count=%d%n", account, total, count);
-                    break;
-                }
-
-                case "TOP_CHANNELS": {
-                    int k = Integer.parseInt(p[1]);
-                    Map<String, Integer> counts = new HashMap<>();
-                    for (Tx tx : txs) {
-                        counts.put(tx.channel, counts.getOrDefault(tx.channel, 0) + 1);
-                    }
-
-                    List<Map.Entry<String, Integer>> entries = new ArrayList<>(counts.entrySet());
-                    entries.sort(Comparator
-                            .comparingInt((Map.Entry<String, Integer> e) -> e.getValue()).reversed()
-                            .thenComparing(Map.Entry::getKey));
-
-                    if (entries.isEmpty()) {
-                        System.out.println("NONE");
-                        break;
-                    }
-
-                    int limit = Math.min(k, entries.size());
-                    for (int idx = 0; idx < limit; idx++) {
-                        Map.Entry<String, Integer> e = entries.get(idx);
-                        System.out.println(e.getKey() + " " + e.getValue());
-                    }
-                    break;
-                }
-
-                default:
-                    // Ignore unknown commands.
-                    break;
-            }
-        }
+        statistica.entrySet().stream().sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .limit(k).forEach(e -> System.out.println(e.getKey() + " " + e.getValue()));
     }
 
-    private static String nextNonEmpty(BufferedReader br) throws IOException {
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (!line.trim().isEmpty()) {
-                return line.trim();
-            }
-        }
-        return null;
-    }
-
-    private static final class Tx {
-        private final int id;
-        private final double amount;
-        private final String date;
-        private final String country;
-        private final String channel;
-        private final String account;
-
-        private Tx(int id, double amount, String date, String country, String channel, String account) {
-            this.id = id;
-            this.amount = amount;
-            this.date = date;
-            this.country = country;
-            this.channel = channel;
-            this.account = account;
-        }
-    }
 }
