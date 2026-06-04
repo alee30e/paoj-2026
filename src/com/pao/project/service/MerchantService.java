@@ -36,7 +36,7 @@ public class MerchantService {
 //        return merchant;
 //    }
 
-    public Merchant addMerchant(String name, MerchantCategory category,
+    public Merchant addMerchant(String name, ServiceCategory category,
                                 BusinessClient businessClient,
                                 Account settlementAccount) {
 

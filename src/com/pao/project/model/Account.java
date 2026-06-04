@@ -24,6 +24,10 @@ public abstract class Account implements Comparable<Account> {
         return "ACC_" + nextId++;
     }
 
+    public void setId(String id) { this.id = id; }
+
+    public void setBalance(Double balance) { this.balance = balance; }
+
     public String getId() {
         return id;
     }

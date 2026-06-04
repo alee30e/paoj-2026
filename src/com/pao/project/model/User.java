@@ -36,6 +36,8 @@ public class User {
         return role;
     }
 
+    public void setId(String id) { this.id = id; }
+
     public Client getClient() {
         return client;
     }

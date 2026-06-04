@@ -21,7 +21,9 @@ public abstract class Client {
         this.phone = phone;
         this.accounts = new HashSet<>();
     }
-
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getId() {
         return id;
     }

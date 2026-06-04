@@ -5,18 +5,27 @@ import java.time.LocalDateTime;
 public class Transaction {
     private static int nextId = 1;
 
-    private final String id;
-    private final String sourceIban;
-    private final String destinationIban;
-    private final Double amount;
-    private final Currency currency;
-    private final TransactionType type;
-    private final LocalDateTime timestamp;
-    private final String description;
+//    private final String id;
+//    private final String sourceIban;
+//    private final String destinationIban;
+//    private final Double amount;
+//    private final Currency currency;
+//    private final TransactionType type;
+//    private final LocalDateTime timestamp;
+//    private final String description;
+    private String id;
+    private String sourceIban;
+    private String destinationIban;
+    private Double amount;
+    private Currency currency;
+    private TransactionType type;
+    private LocalDateTime timestamp;
+    private String description;
 
     public Transaction(String sourceIban, String destinationIban, Double amount,
                        Currency currency, TransactionType type, String description) {
-        this.id = generateId();
+//        this.id = generateId();
+        this.id = null;
         this.sourceIban = sourceIban;
         this.destinationIban = destinationIban;
         this.amount = amount;
@@ -60,6 +69,14 @@ public class Transaction {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

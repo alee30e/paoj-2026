@@ -18,7 +18,7 @@ public abstract class Loan {
     private LoanStatus status;
     private List<Installment> installments;
 
-    private static int nextId = 1;
+//    private static int nextId = 1;
     private static int nextLoanNumber = 1;
 
 //    public Loan(String id, String loanNumber, Client client, Double requestedAmount, String linkedAccountIBAN, int numberOfMonths,
@@ -40,7 +40,8 @@ public abstract class Loan {
     protected Loan(Client client, Double requestedAmount, String linkedAccountIBAN, int numberOfMonths, Frequency frequency,
                    LocalDate startDate, Double interestRate) {
 
-        this.id = generateId();
+//        this.id = generateId();
+        this.id = null;
         this.loanNumber = generateLoanNumber();
         this.client = client;
         this.requestedAmount = requestedAmount;
@@ -103,9 +104,9 @@ public abstract class Loan {
         return interestRate;
     }
 
-    public static int getNextId() {
-        return nextId;
-    }
+//    public static int getNextId() {
+//        return nextId;
+//    }
 
     public void setInstallments(List<Installment> installments) {
         this.installments = installments;
@@ -115,9 +116,9 @@ public abstract class Loan {
         Loan.nextLoanNumber = nextLoanNumber;
     }
 
-    public static void setNextId(int nextId) {
-        Loan.nextId = nextId;
-    }
+//    public static void setNextId(int nextId) {
+//        Loan.nextId = nextId;
+//    }
 
     public void setStatus(LoanStatus status) {
         this.status = status;
@@ -175,9 +176,9 @@ public abstract class Loan {
         return nextLoanNumber;
     }
 
-    private static String generateId() {
-        return "LOAN_" + nextId++;
-    }
+//    private static String generateId() {
+//        return "LOAN_" + nextId++;
+//    }
 
     private static String generateLoanNumber() {
         return "LN_" + nextLoanNumber++;

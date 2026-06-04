@@ -5,12 +5,12 @@ public class Merchant {
 
     private String id;
     private String name;
-    private MerchantCategory category;
+    private ServiceCategory category;
     private BusinessClient businessClient;
     private Account settlementAccount;
     private Boolean active;
 
-    public Merchant(String name, MerchantCategory category,
+    public Merchant(String name, ServiceCategory category,
                     BusinessClient businessClient, Account settlementAccount) {
         this.id = generateId();
         this.name = name;
@@ -32,7 +32,7 @@ public class Merchant {
         return name;
     }
 
-    public MerchantCategory getCategory() {
+    public ServiceCategory getCategory() {
         return category;
     }
 

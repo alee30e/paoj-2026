@@ -1,4 +1,4 @@
-package com.pao.project.model;
+package com.pao.project;
 
 import com.pao.project.model.*;
 import com.pao.project.service.*;
@@ -16,7 +16,8 @@ public class Main {
     private static final AccountService accountService = AccountService.getInstance();
     private static final LoanService loanService = LoanService.getInstance();
     private static final TransactionService transactionService = TransactionService.getInstance();
-    private static final MerchantService merchantService = MerchantService.getInstance();
+    private static final AuditService auditService = AuditService.getInstance();
+//    private static final MerchantService merchantService = MerchantService.getInstance();
     private static final RecurringPaymentService recurringPaymentService = RecurringPaymentService.getInstance();
 
     public static void main(String[] args) {
@@ -47,11 +48,12 @@ public class Main {
                         showAllAccountsSorted();
                         break;
                     case 6:
-                        showAllMerchants();
-                        break;
-                    case 7:
+//                        showAllMerchants();
                         executeAllDueRecurringPayments();
                         break;
+//                    case 7:
+//                        executeAllDueRecurringPayments();
+//                        break;
                     case 0:
                         running = false;
                         System.out.println("Aplicatia s-a inchis.");
@@ -85,14 +87,28 @@ public class Main {
 
         userService.addUser("firma.user", "Parola1@", "CLIENT", firma);
 
-        Merchant merchant = merchantService.addMerchant("Demo Telecom", MerchantCategory.TELECOM, firma, firmaCurrent);
-
-        merchantService.addMerchant("StreamPlus", MerchantCategory.STREAMING, firma, firmaCurrent);
-
-        merchantService.addMerchant("City Utilities", MerchantCategory.UTILITIES, firma, firmaCurrent);
-
-        recurringPaymentService.addRecurringPayment(ana, anaCurrent, merchant, 75.0, Currency.RON,
-                Frequency.MONTHLY, LocalDate.now(), null, "Abonament telefonie Demo Telecom");
+//        Merchant merchant = merchantService.addMerchant("Demo Telecom", ServiceCategory.TELECOM, firma, firmaCurrent);
+//
+//        merchantService.addMerchant("StreamPlus", ServiceCategory.STREAMING, firma, firmaCurrent);
+//
+//        merchantService.addMerchant("City Utilities", ServiceCategory.UTILITIES, firma, firmaCurrent);
+//
+//        recurringPaymentService.addRecurringPayment(ana, anaCurrent, merchant, 75.0, Currency.RON,
+//                Frequency.MONTHLY, LocalDate.now(), null, "Abonament telefonie Demo Telecom");
+//
+//        loanService.createPersonalLoan(ana, 1000.0, anaCurrent.getIBAN(), 12, Frequency.MONTHLY,
+//                0.10, 6000.0);
+        recurringPaymentService.addRecurringPayment(
+                ana,
+                anaCurrent,
+                firmaCurrent,
+                ServiceCategory.TELECOM,
+                75.0,
+                Frequency.MONTHLY,
+                LocalDate.now(),
+                null,
+                "Abonament telefonie Demo IT SRL"
+        );
 
         loanService.createPersonalLoan(ana, 1000.0, anaCurrent.getIBAN(), 12, Frequency.MONTHLY,
                 0.10, 6000.0);
@@ -106,8 +122,8 @@ public class Main {
         System.out.println("3. Login");
         System.out.println("4. Afiseaza toti clientii");
         System.out.println("5. Afiseaza toate conturile sortate dupa sold");
-        System.out.println("6. Afiseaza toti merchantii");
-        System.out.println("7. Executa toate platile recurente scadente azi");
+//        System.out.println("6. Afiseaza toti merchantii");
+        System.out.println("6. Executa toate platile recurente scadente azi");
         System.out.println("0. Iesire");
     }
 
@@ -126,7 +142,7 @@ public class Main {
         System.out.println("9. Vezi ratele unui imprumut");
         System.out.println("10. Plateste urmatoarea rata");
         System.out.println("11. Vezi tranzactiile mele");
-        System.out.println("12. Creeaza merchant pentru client business");
+//        System.out.println("12. Creeaza merchant pentru client business");
         System.out.println("13. Creeaza plata recurenta");
         System.out.println("14. Vezi platile mele recurente");
         System.out.println("15. Executa plata recurenta dupa id");
@@ -145,6 +161,7 @@ public class Main {
 
         User user = userService.login(username, password);
         Client client = user.getClient();
+        audit("login");
 
         System.out.println("Login reusit. Bine ai venit, " + client.getDisplayName() + "!");
 
@@ -195,9 +212,9 @@ public class Main {
                     case 11:
                         showTransactionsForClient(loggedClient);
                         break;
-                    case 12:
-                        createMerchant(loggedClient);
-                        break;
+//                    case 12:
+//                        createMerchant(loggedClient);
+//                        break;
                     case 13:
                         createRecurringPayment(loggedClient);
                         break;
@@ -253,6 +270,7 @@ public class Main {
                 client, 10.0);
 
         userService.addUser(username, password, "CLIENT", client);
+        audit("inregistreaza_client_persoana_fizica");
 
         System.out.println("Client creat cu succes.");
         System.out.println("Id client: " + client.getId());
@@ -282,6 +300,7 @@ public class Main {
         CurrentAccount account = accountService.addCurrentAccount(LocalDate.now(), Currency.RON, 0.0, client, 25.0);
 
         userService.addUser(username, password, "CLIENT", client);
+        audit("inregistreaza_client_business");
 
         System.out.println("Client business creat cu succes.");
         System.out.println("Id client: " + client.getId());
@@ -303,6 +322,7 @@ public class Main {
         for (Client client : clients) {
             System.out.println(client);
         }
+        audit("afiseaza_toti_clientii");
     }
 
     private static void showAllAccountsSorted() {
@@ -320,6 +340,7 @@ public class Main {
         for (Account account : accounts) {
             System.out.println(account);
         }
+        audit("afiseaza_toate_conturile_sortate");
     }
 
     private static void showAccountsForClient(Client client) {
@@ -336,6 +357,7 @@ public class Main {
         for (Account account : accounts) {
             System.out.println(account);
         }
+        audit("afiseaza_conturile_clientului");
     }
 
     private static void createSavingsAccount(Client client) {
@@ -349,6 +371,7 @@ public class Main {
         Double withdrawalLimit = readDouble("Limita retragere: ");
 
         SavingsAccount account = accountService.addSavingsAccount(LocalDate.now(), currency, balance, client, interestRate, minimumBalance, withdrawalLimit);
+        audit("creeaza_cont_economii");
 
         System.out.println("Cont de economii creat cu succes.");
         System.out.println(account);
@@ -364,6 +387,7 @@ public class Main {
         Double amount = readDouble("Suma: ");
 
         accountService.depositForClient(client, iban, amount);
+        audit("depunere_bani");
 
         System.out.println("Depunere realizata cu succes.");
     }
@@ -378,6 +402,7 @@ public class Main {
         Double amount = readDouble("Suma: ");
 
         accountService.withdrawForClient(client, iban, amount);
+        audit("retragere_bani");
 
         System.out.println("Retragere realizata cu succes.");
     }
@@ -393,6 +418,7 @@ public class Main {
         Double amount = readDouble("Suma: ");
 
         accountService.transferFromClient(client, sourceIban, destinationIban, amount);
+        audit("transfer_bani");
 
         System.out.println("Transfer realizat cu succes.");
     }
@@ -414,6 +440,7 @@ public class Main {
 
             PersonalLoan loan = loanService.createPersonalLoan(client, requestedAmount, iban, numberOfMonths,
                     frequency, interestRate, declaredIncome);
+            audit("creeaza_credit_personal");
 
             System.out.println("Cerere procesata.");
             System.out.println(loan);
@@ -423,6 +450,7 @@ public class Main {
 
             BusinessLoan loan = loanService.createBusinessLoan(client, requestedAmount, iban, numberOfMonths, frequency,
                     interestRate, revenue, expenses);
+            audit("creeaza_credit_business");
 
             System.out.println("Cerere procesata.");
             System.out.println(loan);
@@ -443,6 +471,7 @@ public class Main {
         for (Loan loan : loans) {
             System.out.println(loan);
         }
+        audit("afiseaza_imprumuturile_clientului");
     }
 
     private static void showInstallmentsForLoan(Client client) {
@@ -463,6 +492,7 @@ public class Main {
         for (Installment installment : loan.getInstallments()) {
             System.out.println(installment);
         }
+        audit("afiseaza_ratele_imprumutului");
     }
 
     private static void payNextInstallment(Client client) {
@@ -474,6 +504,7 @@ public class Main {
         String loanId = readLine("Id imprumut: ");
 
         loanService.payNextInstallmentForClient(client, loanId);
+        audit("plateste_urmatoarea_rata");
 
         System.out.println("Rata platita cu succes.");
     }
@@ -492,45 +523,46 @@ public class Main {
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
         }
+        audit("afiseaza_tranzactiile_clientului");
     }
 
-    private static void createMerchant(Client client) {
-        System.out.println();
-        System.out.println("--- Creare merchant ---");
+//    private static void createMerchant(Client client) {
+//        System.out.println();
+//        System.out.println("--- Creare merchant ---");
+//
+//        if (!(client instanceof BusinessClient)) {
+//            throw new IllegalStateException("Doar clientii business pot crea merchant.");
+//        }
+//
+//        showAccountsForClient(client);
+//
+//        String name = readLine("Nume merchant: ");
+//        ServiceCategory category = readMerchantCategory();
+//        String iban = readLine("IBAN cont decontare: ");
+//
+//        Account settlementAccount = accountService.findClientAccountByIban(client, iban);
+//
+//        Merchant merchant = merchantService.addMerchant(name, category, (BusinessClient) client, settlementAccount);
+//
+//        System.out.println("Merchant creat cu succes.");
+//        System.out.println(merchant);
+//    }
 
-        if (!(client instanceof BusinessClient)) {
-            throw new IllegalStateException("Doar clientii business pot crea merchant.");
-        }
-
-        showAccountsForClient(client);
-
-        String name = readLine("Nume merchant: ");
-        MerchantCategory category = readMerchantCategory();
-        String iban = readLine("IBAN cont decontare: ");
-
-        Account settlementAccount = accountService.findClientAccountByIban(client, iban);
-
-        Merchant merchant = merchantService.addMerchant(name, category, (BusinessClient) client, settlementAccount);
-
-        System.out.println("Merchant creat cu succes.");
-        System.out.println(merchant);
-    }
-
-    private static void showAllMerchants() {
-        System.out.println();
-        System.out.println("--- Toti merchantii ---");
-
-        List<Merchant> merchants = merchantService.getAllMerchants();
-
-        if (merchants.isEmpty()) {
-            System.out.println("Nu exista merchanti.");
-            return;
-        }
-
-        for (Merchant merchant : merchants) {
-            System.out.println(merchant);
-        }
-    }
+//    private static void showAllMerchants() {
+//        System.out.println();
+//        System.out.println("--- Toti merchantii ---");
+//
+//        List<Merchant> merchants = merchantService.getAllMerchants();
+//
+//        if (merchants.isEmpty()) {
+//            System.out.println("Nu exista merchanti.");
+//            return;
+//        }
+//
+//        for (Merchant merchant : merchants) {
+//            System.out.println(merchant);
+//        }
+//    }
 
 //    private static void createRecurringPayment(Client client) {
 //        System.out.println();
@@ -579,41 +611,45 @@ public class Main {
         System.out.println();
         System.out.println("--- Creare plata recurenta ---");
 
+        System.out.println("Alege contul sursa, adica din ce cont pleaca banii:");
         showAccountsForClient(client);
 
         String sourceIban = readLine("IBAN cont sursa: ");
         Account sourceAccount = accountService.findClientAccountByIban(client, sourceIban);
 
-        showAllMerchants();
-
-        String merchantId = readLine("Id merchant: ");
-        Merchant merchant = merchantService.findById(merchantId);
-
-        if (!merchant.isActive()) {
-            throw new IllegalStateException("Merchantul selectat nu este activ.");
-        }
-
-        Double amount = getDefaultAmountForMerchant(merchant);
-        Frequency frequency = getDefaultFrequencyForMerchant(merchant);
-        String description = getDefaultDescriptionForMerchant(merchant);
-
         System.out.println();
-        System.out.println("Abonament detectat pentru merchant:");
-        System.out.println("Merchant: " + merchant.getName());
-        System.out.println("Categorie: " + merchant.getCategory());
-        System.out.println("Suma lunara: " + amount + " " + sourceAccount.getCurrency());
-        System.out.println("Frecventa: " + frequency);
-        System.out.println("Descriere: " + description);
+        System.out.println("Acum introdu contul destinatie, adica unde ajung banii.");
+        System.out.println("Contul destinatie poate apartine altui client, de exemplu o firma.");
+        String destinationIban = readLine("IBAN cont destinatie: ");
+        Account destinationAccount = accountService.findByIban(destinationIban);
 
-        String confirm = readLine("Confirmi crearea platii recurente? da/nu: ");
+        ServiceCategory serviceCategory = readServiceCategory();
 
-        if (!confirm.equalsIgnoreCase("da")) {
-            System.out.println("Crearea platii recurente a fost anulata.");
-            return;
+        Double amount = readDouble("Suma plata recurenta: ");
+        Frequency frequency = readFrequency();
+
+        String hasEndDate = readLine("Are data finala? da/nu: ");
+        LocalDate endDate = null;
+
+        if (hasEndDate.equalsIgnoreCase("da")) {
+            String endDateText = readLine("Data finala yyyy-mm-dd: ");
+            endDate = LocalDate.parse(endDateText);
         }
 
-        RecurringPayment payment = recurringPaymentService.addRecurringPayment(client, sourceAccount, merchant, amount,
-                sourceAccount.getCurrency(), frequency, LocalDate.now(), null, description);
+        String description = readLine("Descriere: ");
+
+        RecurringPayment payment = recurringPaymentService.addRecurringPayment(
+                client,
+                sourceAccount,
+                destinationAccount,
+                serviceCategory,
+                amount,
+                frequency,
+                LocalDate.now(),
+                endDate,
+                description
+        );
+        audit("creeaza_plata_recurenta");
 
         System.out.println("Plata recurenta creata cu succes.");
         System.out.println(payment);
@@ -633,6 +669,7 @@ public class Main {
         for (RecurringPayment payment : payments) {
             System.out.println(payment);
         }
+        audit("afiseaza_platile_recurente");
     }
 
     private static void executeRecurringPaymentById(Client client) {
@@ -650,6 +687,7 @@ public class Main {
         }
 
         recurringPaymentService.executePayment(id, LocalDate.now());
+        audit("executa_plata_recurenta_dupa_id");
 
         System.out.println("Plata recurenta executata cu succes.");
     }
@@ -659,6 +697,7 @@ public class Main {
         System.out.println("--- Executare plati recurente scadente azi ---");
 
         recurringPaymentService.executeDuePayments(LocalDate.now());
+        audit("executa_toate_platile_recurente_scadente");
 
         System.out.println("Procesare finalizata.");
     }
@@ -678,6 +717,7 @@ public class Main {
         }
 
         recurringPaymentService.deactivateRecurringPayment(id);
+        audit("dezactiveaza_plata_recurenta");
 
         System.out.println("Plata recurenta dezactivata.");
     }
@@ -697,6 +737,7 @@ public class Main {
         }
 
         recurringPaymentService.activateRecurringPayment(id);
+        audit("activeaza_plata_recurenta");
 
         System.out.println("Plata recurenta activata.");
     }
@@ -709,61 +750,66 @@ public class Main {
         String newPassword = readLine("Parola noua: ");
 
         userService.changePassword(loggedUser.getUsername(), oldPassword, newPassword);
+        audit("schimba_parola");
 
         System.out.println("Parola schimbata cu succes.");
     }
 
-    private static Double getDefaultAmountForMerchant(Merchant merchant) {
-        switch (merchant.getCategory()) {
-            case TELECOM:
-                return 75.0;
-            case STREAMING:
-                return 49.99;
-            case UTILITIES:
-                return 150.0;
-            case INSURANCE:
-                return 120.0;
-            case SHOPPING:
-                return 100.0;
-            case OTHER:
-                return 50.0;
-            default:
-                return 50.0;
-        }
+    private static void audit(String actionName) {
+        auditService.logAction(actionName);
     }
 
-    private static Frequency getDefaultFrequencyForMerchant(Merchant merchant) {
-        switch (merchant.getCategory()) {
-            case TELECOM:
-            case STREAMING:
-            case UTILITIES:
-            case INSURANCE:
-            case SHOPPING:
-            case OTHER:
-                return Frequency.MONTHLY;
-            default:
-                return Frequency.MONTHLY;
-        }
-    }
+//    private static Double getDefaultAmountForMerchant(Merchant merchant) {
+//        switch (merchant.getCategory()) {
+//            case TELECOM:
+//                return 75.0;
+//            case STREAMING:
+//                return 49.99;
+//            case UTILITIES:
+//                return 150.0;
+//            case INSURANCE:
+//                return 120.0;
+//            case SHOPPING:
+//                return 100.0;
+//            case OTHER:
+//                return 50.0;
+//            default:
+//                return 50.0;
+//        }
+//    }
 
-    private static String getDefaultDescriptionForMerchant(Merchant merchant) {
-        switch (merchant.getCategory()) {
-            case TELECOM:
-                return "Abonament telefonie - " + merchant.getName();
-            case STREAMING:
-                return "Abonament streaming - " + merchant.getName();
-            case UTILITIES:
-                return "Factura utilitati - " + merchant.getName();
-            case INSURANCE:
-                return "Prima asigurare - " + merchant.getName();
-            case SHOPPING:
-                return "Abonament cumparaturi - " + merchant.getName();
-            case OTHER:
-                return "Plata recurenta - " + merchant.getName();
-            default:
-                return "Plata recurenta - " + merchant.getName();
-        }
-    }
+//    private static Frequency getDefaultFrequencyForMerchant(Merchant merchant) {
+//        switch (merchant.getCategory()) {
+//            case TELECOM:
+//            case STREAMING:
+//            case UTILITIES:
+//            case INSURANCE:
+//            case SHOPPING:
+//            case OTHER:
+//                return Frequency.MONTHLY;
+//            default:
+//                return Frequency.MONTHLY;
+//        }
+//    }
+
+//    private static String getDefaultDescriptionForMerchant(Merchant merchant) {
+//        switch (merchant.getCategory()) {
+//            case TELECOM:
+//                return "Abonament telefonie - " + merchant.getName();
+//            case STREAMING:
+//                return "Abonament streaming - " + merchant.getName();
+//            case UTILITIES:
+//                return "Factura utilitati - " + merchant.getName();
+//            case INSURANCE:
+//                return "Prima asigurare - " + merchant.getName();
+//            case SHOPPING:
+//                return "Abonament cumparaturi - " + merchant.getName();
+//            case OTHER:
+//                return "Plata recurenta - " + merchant.getName();
+//            default:
+//                return "Plata recurenta - " + merchant.getName();
+//        }
+//    }
 
     private static Currency readCurrency() {
         System.out.println("Valuta:");
@@ -802,8 +848,8 @@ public class Main {
         }
     }
 
-    private static MerchantCategory readMerchantCategory() {
-        System.out.println("Categorie merchant:");
+    private static ServiceCategory readServiceCategory() {
+        System.out.println("Categorie Service:");
         System.out.println("1. STREAMING");
         System.out.println("2. TELECOM");
         System.out.println("3. UTILITIES");
@@ -815,17 +861,17 @@ public class Main {
 
         switch (option) {
             case 1:
-                return MerchantCategory.STREAMING;
+                return ServiceCategory.STREAMING;
             case 2:
-                return MerchantCategory.TELECOM;
+                return ServiceCategory.TELECOM;
             case 3:
-                return MerchantCategory.UTILITIES;
+                return ServiceCategory.UTILITIES;
             case 4:
-                return MerchantCategory.INSURANCE;
+                return ServiceCategory.INSURANCE;
             case 5:
-                return MerchantCategory.SHOPPING;
+                return ServiceCategory.SHOPPING;
             case 6:
-                return MerchantCategory.OTHER;
+                return ServiceCategory.OTHER;
             default:
                 throw new IllegalArgumentException("Categorie invalida.");
         }
